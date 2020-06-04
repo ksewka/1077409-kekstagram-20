@@ -36,7 +36,7 @@ var createComment = function () {
 // Функция для создания рандомного количества комментариев
 var createComments = function () {
   var commentsArray = [];
-  for (let i = 0; i <= getRandomNumber(1, 5); i++) {
+  for (var i = 0; i <= getRandomNumber(1, 5); i++) {
     commentsArray.push(createComment());
   }
   return commentsArray;
@@ -46,7 +46,7 @@ var createComments = function () {
 // Функция для создания одного поста
 var createPost = function (index) {
   var post = {
-    url: 'photos/' + (index+1) + '.jpg', // 1-25
+    url: 'photos/' + (index + 1) + '.jpg', // 1-25
     description: 'Все ок!',
     likes: getRandomNumber(15, 200),
     comments: createComments(),
@@ -56,7 +56,7 @@ var createPost = function (index) {
 
 // Создание 25 постов
 var posts = [];
-for (let i = 0; i < postsAmount; i++) {
+for (var i = 0; i < postsAmount; i++) {
   posts.push(createPost(i));
 }
 
@@ -70,10 +70,9 @@ var getPost = function (post) {
 };
 
 
- // Отрисовка DOM элемента на странице
+// Отрисовка DOM элемента на странице
 var fragment = document.createDocumentFragment();
-for (let i = 0; i < postsAmount; i++) {
-  fragment.appendChild(getPost(posts[i]));
+for (var j = 0; j < postsAmount; j++) {
+  fragment.appendChild(getPost(posts[j]));
 }
 pictures.appendChild(fragment);
-console.log((posts));
