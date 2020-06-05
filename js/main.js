@@ -88,23 +88,23 @@ bigPicture.querySelector('.social__caption').textContent = posts[0].description;
 // Функция удаляет комментарии по умолчанию из разметки
 var destroyedComments = function () {
   var defaultComments = document.querySelectorAll('.social__comment');
-  for (var i = 0; i < defaultComments.length; i++) {
-    defaultComments[i].remove();
+  for (var k = 0; k < defaultComments.length; k++) {
+    defaultComments[k].remove();
   }
 };
 
 // Функция вставляет сгенерированные комментарии в DOM
 var showComments = function () {
-  var fragment = document.createDocumentFragment();
-  for (var i = 0; i < posts[0].comments.length; i++) {
+  var fragmentOfComments = document.createDocumentFragment();
+  for (var l = 0; l < posts[0].comments.length; l++) {
     var clonedComment = bigPicture.querySelector('.social__comment').cloneNode(true);
-    clonedComment.querySelector('img').src = posts[0].comments[i].avatar;
-    clonedComment.querySelector('img').alt = posts[0].comments[i].name;
-    clonedComment.querySelector('.social__text').textContent = posts[0].comments[i].message;
-    fragment.appendChild(clonedComment);
+    clonedComment.querySelector('img').src = posts[0].comments[l].avatar;
+    clonedComment.querySelector('img').alt = posts[0].comments[l].name;
+    clonedComment.querySelector('.social__text').textContent = posts[0].comments[l].message;
+    fragmentOfComments.appendChild(clonedComment);
   }
   destroyedComments(); // Подчищаем комменты с разметки
-  document.querySelector('.social__comments').appendChild(fragment); // Вставляем сгенерированные на страницу
+  document.querySelector('.social__comments').appendChild(fragmentOfComments); // Вставляем сгенерированные на страницу
 };
 
 showComments();
