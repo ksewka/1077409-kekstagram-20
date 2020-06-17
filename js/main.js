@@ -1,117 +1,100 @@
 'use strict';
 
-var MESSAGES = [
-  'Всё отлично!',
-  'В целом всё неплохо. Но не всё.',
-  'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
-  'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
-  'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
-  'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
-];
+(function () {
 
-var NAMES = ['Артем', 'Зина', 'Александр', 'Джангар', 'Чаяна', 'Лилия'];
-var postsAmount = 25;
-var pictureTemplate = document.querySelector('#picture')
-  .content
-  .querySelector('.picture');
 
-var pictures = document.querySelector('.pictures');
-var bigPicture = document.querySelector('.big-picture');
+  var pictureTemplate = document.querySelector('#picture')
+    .content
+    .querySelector('.picture');
 
-// Функция подбора случайного числа в заданном промежутке
-var getRandomNumber = function (min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
+  var pictures = document.querySelector('.pictures');
+  var bigPicture = document.querySelector('.big-picture');
+  var scale = document.querySelector('.scale');
+  var uploadInput = document.querySelector('#upload-file');
 
-// Функция для создания одного комментария
-var createComment = function () {
-  var comment = {
-    avatar: 'img/avatar-' + getRandomNumber(1, 6) + '.svg',
-    message: MESSAGES[getRandomNumber(0, MESSAGES.length - 1)],
-    name: NAMES[getRandomNumber(0, NAMES.length - 1)]
+
+  // Создание DOM элемента
+  var getPost = function (post) {
+    var clonedPost = pictureTemplate.cloneNode(true);
+    clonedPost.querySelector('.picture__img').src = post.url;
+    clonedPost.querySelector('.picture__likes').textContent = post.likes;
+    clonedPost.querySelector('.picture__comments').innerHTML = post.comments.length;
+    return clonedPost;
   };
-  return comment;
-};
 
-// Функция для создания рандомного количества комментариев
-var createComments = function () {
-  var commentsArray = [];
-  for (var i = 0; i <= getRandomNumber(1, 5); i++) {
-    commentsArray.push(createComment());
+  // Отрисовка DOM элемента на странице
+  var fragment = document.createDocumentFragment();
+  var postsAmount = window.data.postsAmount;
+  var posts = window.data.posts;
+  for (var j = 0; j < postsAmount; j++) {
+    fragment.appendChild(getPost(posts[j]));
   }
-  return commentsArray;
-};
+  pictures.appendChild(fragment);
 
+  // Заполняем bigPicture информацией из первого элемента массива
+  bigPicture.classList.remove('hiddenn');
+  bigPicture.querySelector('.big-picture__img').src = posts[0].url;
+  bigPicture.querySelector('.likes-count').textContent = posts[0].likes;
+  bigPicture.querySelector('.comments-count').textContent = posts[0].comments.length;
+  bigPicture.querySelector('.social__caption').textContent = posts[0].description;
 
-// Функция для создания одного поста
-var createPost = function (index) {
-  var post = {
-    url: 'photos/' + (index + 1) + '.jpg', // 1-25
-    description: 'Все ок!Бери от жизни все!',
-    likes: getRandomNumber(15, 200),
-    comments: createComments(),
+  // Функция удаляет комментарии по умолчанию из разметки
+  var destroyedComments = function () {
+    var defaultComments = document.querySelectorAll('.social__comment');
+    for (var k = 0; k < defaultComments.length; k++) {
+      defaultComments[k].remove();
+    }
   };
-  return post;
-};
 
-// Создание 25 постов
-var posts = [];
-for (var i = 0; i < postsAmount; i++) {
-  posts.push(createPost(i));
-}
+  // Функция вставляет сгенерированные комментарии в DOM
+  var showComments = function () {
+    var fragmentOfComments = document.createDocumentFragment();
+    for (var l = 0; l < posts[0].comments.length; l++) {
+      var clonedComment = bigPicture.querySelector('.social__comment').cloneNode(true);
+      clonedComment.querySelector('img').src = posts[0].comments[l].avatar;
+      clonedComment.querySelector('img').alt = posts[0].comments[l].name;
+      clonedComment.querySelector('.social__text').textContent = posts[0].comments[l].message;
+      fragmentOfComments.appendChild(clonedComment);
+    }
+    destroyedComments(); // Подчищаем комменты с разметки
+    document.querySelector('.social__comments').appendChild(fragmentOfComments); // Вставляем сгенерированные на страницу
+  };
 
-// Создание DOM элемента
-var getPost = function (post) {
-  var clonedPost = pictureTemplate.cloneNode(true);
-  clonedPost.querySelector('.picture__img').src = post.url;
-  clonedPost.querySelector('.picture__likes').textContent = post.likes;
-  clonedPost.querySelector('.picture__comments').innerHTML = post.comments.length;
-  return clonedPost;
-};
+  showComments();
 
+  // Прячем блоки счётчика комментариев и загрузки новых комментариев
+  document.querySelector('.social__comment-count').classList.add('hidden');
+  document.querySelector('.comments-loader').classList.add('hidden');
 
-// Отрисовка DOM элемента на странице
-var fragment = document.createDocumentFragment();
-for (var j = 0; j < postsAmount; j++) {
-  fragment.appendChild(getPost(posts[j]));
-}
-pictures.appendChild(fragment);
+  var onPopupEcsClose = function (evt) {
+    evt.preventDefault();
+    if (evt.key === 'Escape') {
+      closePopup();
+    }
+  };
 
+  var closePopup = function () {
+    document.querySelector('.img-upload__overlay').classList.add('hidden');
+    document.querySelector('body').classList.remove('modal-open');
+    document.removeEventListener('keydown', onPopupEcsClose);
+    scale.removeEventListener('click', scaleChangeHandler);
+    uploadInput.value = '';
+  };
 
-// Заполняем bigPicture информацией из первого элемента массива
-bigPicture.classList.remove('hidden');
-bigPicture.querySelector('.big-picture__img').src = posts[0].url;
-bigPicture.querySelector('.likes-count').textContent = posts[0].likes;
-bigPicture.querySelector('.comments-count').textContent = posts[0].comments.length;
-bigPicture.querySelector('.social__caption').textContent = posts[0].description;
+  // Форма редактирования открывается при загрузке фотографии
 
-// Функция удаляет комментарии по умолчанию из разметки
-var destroyedComments = function () {
-  var defaultComments = document.querySelectorAll('.social__comment');
-  for (var k = 0; k < defaultComments.length; k++) {
-    defaultComments[k].remove();
-  }
-};
+  uploadInput.onchange = function () {
+    document.querySelector('body').classList.add('modal-open');
+    document.querySelector('.img-upload__overlay').classList.remove('hidden');
+    document.querySelector('.img-upload__cancel').addEventListener('click', function () {
+      closePopup();
+    });
+    document.addEventListener('keydown', onPopupEcsClose);
+    scale.addEventListener('click', scaleChangeHandler);
+  };
 
-// Функция вставляет сгенерированные комментарии в DOM
-var showComments = function () {
-  var fragmentOfComments = document.createDocumentFragment();
-  for (var l = 0; l < posts[0].comments.length; l++) {
-    var clonedComment = bigPicture.querySelector('.social__comment').cloneNode(true);
-    clonedComment.querySelector('img').src = posts[0].comments[l].avatar;
-    clonedComment.querySelector('img').alt = posts[0].comments[l].name;
-    clonedComment.querySelector('.social__text').textContent = posts[0].comments[l].message;
-    fragmentOfComments.appendChild(clonedComment);
-  }
-  destroyedComments(); // Подчищаем комменты с разметки
-  document.querySelector('.social__comments').appendChild(fragmentOfComments); // Вставляем сгенерированные на страницу
-};
+  var scaleChangeHandler = function () {
+    window.scale.zooming();
+  };
 
-showComments();
-
-// Прячем блоки счётчика комментариев и загрузки новых комментариев
-document.querySelector('.social__comment-count').classList.add('hidden');
-document.querySelector('.comments-loader').classList.add('hidden');
-
-// Чтобы контейнер с фотографиями позади не прокручивался при скролле.
-document.querySelector('body').classList.add('modal-open');
+})();
