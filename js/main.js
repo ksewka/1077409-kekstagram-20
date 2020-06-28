@@ -11,6 +11,9 @@
   var bigPicture = document.querySelector('.big-picture');
   var scale = document.querySelector('.scale');
   var uploadInput = document.querySelector('#upload-file');
+  var comments = document.querySelector('.text__description');
+  var maxLengthOfComments = 140;
+  var hashtagsInput = document.querySelector('.text__hashtags');
 
 
   // Создание DOM элемента
@@ -65,10 +68,9 @@
   // Прячем блоки счётчика комментариев и загрузки новых комментариев
   document.querySelector('.social__comment-count').classList.add('hidden');
   document.querySelector('.comments-loader').classList.add('hidden');
-  var hashtagsInput = document.querySelector('.text__hashtags');
 
   var onPopupEcsClose = function (evt) {
-    if (evt.key === 'Escape' && hashtagsInput !== document.activeElement) {
+    if (evt.key === 'Escape' && hashtagsInput !== document.activeElement && comments !== document.activeElement) {
       closePopup();
     }
   };
@@ -92,6 +94,7 @@
     document.addEventListener('keydown', onPopupEcsClose);
     scale.addEventListener('click', scaleChangeHandler);
     hashtagsInput.addEventListener('input', hashtagValidateHandler);
+    comments.addEventListener('input', commentsValidateHandler);
   };
 
   var hashtagValidateHandler = function () {
@@ -99,6 +102,9 @@
   };
   var scaleChangeHandler = function () {
     window.scale.zooming();
+  };
+  var commentsValidateHandler = function () {
+    comments.setCustomValidity('Длина комментария не может составлять больше 140 символов');
   };
 
 })();
