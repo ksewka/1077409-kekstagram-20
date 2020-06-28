@@ -65,10 +65,10 @@
   // Прячем блоки счётчика комментариев и загрузки новых комментариев
   document.querySelector('.social__comment-count').classList.add('hidden');
   document.querySelector('.comments-loader').classList.add('hidden');
+  var hashtagsInput = document.querySelector('.text__hashtags');
 
   var onPopupEcsClose = function (evt) {
-    evt.preventDefault();
-    if (evt.key === 'Escape') {
+    if (evt.key === 'Escape' && hashtagsInput !== document.activeElement) {
       closePopup();
     }
   };
@@ -91,8 +91,12 @@
     });
     document.addEventListener('keydown', onPopupEcsClose);
     scale.addEventListener('click', scaleChangeHandler);
+    hashtagsInput.addEventListener('input', hashtagValidateHandler);
   };
 
+  var hashtagValidateHandler = function () {
+    window.hashtags.validate();
+  };
   var scaleChangeHandler = function () {
     window.scale.zooming();
   };
