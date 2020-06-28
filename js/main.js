@@ -7,9 +7,6 @@
   var uploadInput = document.querySelector('#upload-file');
   var comments = document.querySelector('.text__description');
   var hashtagsInput = document.querySelector('.text__hashtags');
-
-
-
   var onPopupEcsClose = function (evt) {
     if (evt.key === 'Escape' && hashtagsInput !== document.activeElement && comments !== document.activeElement) {
       closePopup();
