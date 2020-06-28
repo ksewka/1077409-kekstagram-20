@@ -34,10 +34,10 @@
     }
   };
 
-  var scalePic = function (scalePic) {
-    imgPreview.style.transform = 'scale(' + (scalePic / SCALE.MAX) + ')';
-    scaleControlValue.setAttribute('value', scalePic + '%');
-    currentScale = scalePic;
+  var scalePic = function (scaleValue) {
+    imgPreview.style.transform = 'scale(' + (scaleValue / SCALE.MAX) + ')';
+    scaleControlValue.setAttribute('value', scaleValue + '%');
+    currentScale = scaleValue;
   };
 
   window.scale = {
