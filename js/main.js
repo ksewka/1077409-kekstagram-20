@@ -21,8 +21,14 @@
     uploadInput.value = '';
   };
 
-  // Форма редактирования открывается при загрузке фотографии
+  var hashtagValidateHandler = function () {
+    window.hashtags.validate();
+  };
+  var scaleChangeHandler = function () {
+    window.scale.zooming();
+  };
 
+  // Форма редактирования открывается при загрузке фотографии
   uploadInput.onchange = function () {
     document.querySelector('body').classList.add('modal-open');
     document.querySelector('.img-upload__overlay').classList.remove('hidden');
@@ -32,13 +38,6 @@
     document.addEventListener('keydown', onPopupEcsClose);
     scale.addEventListener('click', scaleChangeHandler);
     hashtagsInput.addEventListener('input', hashtagValidateHandler);
-  };
-
-  var hashtagValidateHandler = function () {
-    window.hashtags.validate();
-  };
-  var scaleChangeHandler = function () {
-    window.scale.zooming();
   };
 
 })();
