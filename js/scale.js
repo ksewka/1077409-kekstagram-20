@@ -40,7 +40,12 @@
     currentScale = scaleValue;
   };
 
+  var getDefaultSettings = function () {
+    scalePic(SCALE.START);
+  };
+
   window.scale = {
     zooming: changeScale,
+    defaultSettings: getDefaultSettings,
   };
 })();
