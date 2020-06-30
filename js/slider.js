@@ -112,5 +112,9 @@
 
   });
 
+  window.slider = {
+    defaultSettings: getDefaultSettings,
+  };
+
 })();
 
