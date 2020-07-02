@@ -23,6 +23,7 @@
       fragment.appendChild(getPost(posts[j]));
     }
     pictures.appendChild(fragment);
+    document.querySelector('.img-filters').classList.remove('img-filters--inactive');
   };
 
   var errorHandler = function (errorMessage) {
@@ -38,5 +39,9 @@
   };
 
   window.backend.load(successHandler, errorHandler);
+
+  window.picture = {
+    createdPictures: successHandler
+  };
 
 })();
