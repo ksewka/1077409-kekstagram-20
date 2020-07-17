@@ -1,6 +1,6 @@
 'use strict';
 
-(function() {
+(function () {
   var urlGet = 'https://javascript.pages.academy/kekstagram/data';
   var urlPost = 'https://javascript.pages.academy/kekstagram';
   var statusCode = {

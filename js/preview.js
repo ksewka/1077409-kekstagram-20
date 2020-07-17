@@ -46,7 +46,6 @@
     document.querySelector('.social__comments').appendChild(fragmentOfComments); // Вставляем сгенерированные на страницу
   };
 
-
   document.querySelector('.social__comment-count').classList.remove('hidden');
 
   // Загрузка комментариев по 5 шт
@@ -77,11 +76,11 @@
   var changeLikes = function () {
     likesCount.classList.toggle('likes-count--active');
     if (likesCount.classList.contains('likes-count--active')) {
-      var countIncreased = Number.parseInt(likesCount.textContent);
+      var countIncreased = Number.parseInt(likesCount.textContent, 10);
       countIncreased++;
       likesCount.textContent = countIncreased;
     } else {
-      var countDecrease = Number.parseInt(likesCount.textContent);
+      var countDecrease = Number.parseInt(likesCount.textContent, 10);
       countDecrease--;
       likesCount.textContent = countDecrease;
     }
@@ -124,7 +123,6 @@
     });
 
   };
-
 
   commentsLoader.addEventListener('click', function (evt) {
     evt.preventDefault();
