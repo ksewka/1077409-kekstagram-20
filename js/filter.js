@@ -14,18 +14,13 @@
     }
   };
 
-  // Добавляем стиль активной кнопки
-  var activateBtn = function () {
-    filterBtn.forEach(function (item) {
-      item.classList.remove('img-filters__button--active');
-    });
-    this.classList.add('img-filters__button--active');
-  };
-
   // Добавление активного стиля для кнопки при клике
   filterBtn.forEach(function (item) {
     item.addEventListener('click', function () {
-      activateBtn.bind(item)();
+      filterBtn.forEach(function (it) {
+        it.classList.remove('img-filters__button--active');
+      });
+      item.classList.add('img-filters__button--active');
     });
   });
 
