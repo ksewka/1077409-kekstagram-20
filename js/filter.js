@@ -32,7 +32,7 @@
   var filtersMap = {
     'filter-default': function (collection) {
       destroyedPictures();
-      window.picture.createdPictures(collection);
+      window.debounce(window.picture.createdPictures(collection));
     },
 
     'filter-random': function (collection) {
@@ -44,7 +44,7 @@
         array.splice(randomIndex, 1);
       }
       destroyedPictures();
-      window.picture.createdPictures(randomArray);
+      window.debounce(window.picture.createdPictures(randomArray));
     },
 
     'filter-discussed': function (collection) {
@@ -53,7 +53,7 @@
         return b.comments.length - a.comments.length;
       });
       destroyedPictures();
-      window.picture.createdPictures(copyArray);
+      window.debounce(window.picture.createdPictures(copyArray));
     }
   };
 
@@ -64,8 +64,8 @@
     });
   };
 
-  var errorHandler = function () {
-    console.log('oops');
+  var errorHandler = function (errorMessage) {
+    window.util.errorHandler(errorMessage);
   };
 
   window.backend.load(successHandler, errorHandler);

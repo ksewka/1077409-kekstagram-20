@@ -16,7 +16,7 @@
     return clonedPost;
   };
 
-  // Отрисовка DOM элемента на странице
+  // Отрисовка DOM элемента на странице, миниатюры фотографий
   var successHandler = function (posts) {
     var fragment = document.createDocumentFragment();
     for (var j = 0; j < posts.length; j++) {
@@ -24,18 +24,11 @@
     }
     pictures.appendChild(fragment);
     document.querySelector('.img-filters').classList.remove('img-filters--inactive');
+    window.preview.created(posts);
   };
 
   var errorHandler = function (errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red; color: white; margin-top: 150px; width: 400px';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
-
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
+    window.util.errorHandler(errorMessage);
   };
 
   window.backend.load(successHandler, errorHandler);

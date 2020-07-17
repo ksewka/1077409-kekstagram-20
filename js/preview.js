@@ -1,9 +1,20 @@
 'use strict';
 (function () {
   var bigPicture = document.querySelector('.big-picture');
+  var commentsLoader = document.querySelector('.comments-loader');
+  var showedComment = {
+    START: 5, // начинаем отсчет с 5 коммента,т к первые 5 видны
+    STEP: 5, // шаг загрузки комментов
+  };
+  var nextShowedComment = showedComment.STEP;
+  var currentCommentNumber = showedComment.START;
+  var openCommentsCount = document.querySelector('.open-comments');
+  var likesCount = document.querySelector('.likes-count');
 
   var closePopup = function () {
     bigPicture.classList.add('hidden');
+
+    commentsLoader.classList.remove('hidden');
     document.removeEventListener('keydown', onPopupEcsClose);
   };
 
@@ -35,9 +46,46 @@
     document.querySelector('.social__comments').appendChild(fragmentOfComments); // Вставляем сгенерированные на страницу
   };
 
-  // Прячем блоки счётчика комментариев и загрузки новых комментариев
-  document.querySelector('.social__comment-count').classList.add('hidden');
-  document.querySelector('.comments-loader').classList.add('hidden');
+
+  document.querySelector('.social__comment-count').classList.remove('hidden');
+
+  // Загрузка комментариев по 5 шт
+  var showMoreComments = function () {
+    var commentsList = document.querySelector('.social__comments');
+    var allComments = commentsList.querySelectorAll('li');
+    var hiddenComments = commentsList.querySelectorAll('.hidden');
+
+    if (hiddenComments.length < showedComment.STEP) {
+      hiddenComments.forEach(function (it) {
+        it.classList.remove('hidden');
+      });
+      commentsLoader.classList.add('hidden');
+      currentCommentNumber = showedComment.START;
+      nextShowedComment = showedComment.STEP;
+      openCommentsCount.textContent = allComments.length;
+    } else {
+      currentCommentNumber = nextShowedComment;
+      nextShowedComment = currentCommentNumber + showedComment.STEP;
+      for (var j = currentCommentNumber; j < nextShowedComment; j++) {
+        allComments[j].classList.remove('hidden');
+      }
+      openCommentsCount.textContent = nextShowedComment;
+    }
+  };
+
+  // Счетчик лайков
+  var changeLikes = function () {
+    likesCount.classList.toggle('likes-count--active');
+    if (likesCount.classList.contains('likes-count--active')) {
+      var countIncreased = Number.parseInt(likesCount.textContent);
+      countIncreased++;
+      likesCount.textContent = countIncreased;
+    } else {
+      var countDecrease = Number.parseInt(likesCount.textContent);
+      countDecrease--;
+      likesCount.textContent = countDecrease;
+    }
+  };
 
 
   // Заполняем bigPicture информацией из сервера
@@ -49,6 +97,16 @@
         bigPicture.querySelector('.big-picture__img').querySelector('img').src = posts[index].url;
         bigPicture.querySelector('.likes-count').textContent = posts[index].likes;
         bigPicture.querySelector('.comments-count').textContent = posts[index].comments.length;
+
+        // Проверяем количество комментов
+        if (posts[index].comments.length < showedComment.START) {
+          bigPicture.querySelector('.open-comments').textContent = posts[index].comments.length;
+          commentsLoader.classList.add('hidden');
+        } else {
+          bigPicture.querySelector('.open-comments').textContent = showedComment.START;
+          commentsLoader.focus();
+        }
+
         bigPicture.querySelector('.social__caption').textContent = posts[index].description;
         showComments(index, posts);
 
@@ -56,22 +114,35 @@
           closePopup();
         });
         document.addEventListener('keydown', onPopupEcsClose);
+
+        // Скрываем все комментарии кроме первых 5 шт
+        var hiddenComments = document.querySelectorAll('.social__comment:nth-child(n+6)');
+        hiddenComments.forEach(function (it) {
+          it.classList.add('hidden');
+        });
       });
     });
+
   };
 
-  var errorHandler = function (errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red; color: white; margin-top: 150px; width: 400px';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
 
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
+  commentsLoader.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    showMoreComments();
+  });
+
+  likesCount.addEventListener('click', function () {
+    changeLikes();
+  });
+
+  var errorHandler = function (errorMessage) {
+    window.util.errorHandler(errorMessage);
   };
 
   window.backend.load(successHandler, errorHandler);
+
+  window.preview = {
+    created: successHandler
+  };
 
 })();
