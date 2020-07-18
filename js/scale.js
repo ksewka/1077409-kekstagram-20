@@ -4,7 +4,7 @@
   var scaleControlSmaller = document.querySelector('.scale__control--smaller');
   var scaleControlBigger = document.querySelector('.scale__control--bigger');
   var scaleControlValue = document.querySelector('.scale__control--value');
-  var imgPreview = document.querySelector('.img-upload__preview');
+  var imgPreview = document.querySelector('.img-upload__preview').querySelector('img');
   var SCALE = {
     MIN: 25,
     MAX: 100,

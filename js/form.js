@@ -19,20 +19,20 @@
     window.scale.defaultSettings();
   };
 
-  var closeSuccessByClick = function () {
-    closeSuccessMessage();
+  var successClickCloseHandler = function () {
+    successCloseHandler();
   };
 
-  var EscOnSuccess = function (evt) {
-    window.util.isEscEvent(evt, closeSuccessMessage);
+  var successEscCloseHandler = function (evt) {
+    window.util.isEscEvent(evt, successCloseHandler);
   };
 
-  var closeSuccessMessage = function () {
+  var successCloseHandler = function () {
     successMessage.classList.add('hidden');
 
-    document.removeEventListener('keydown', EscOnSuccess);
-    successMessage.removeEventListener('click', closeSuccessByClick);
-    successButton.removeEventListener('click', closeSuccessMessage);
+    document.removeEventListener('keydown', successEscCloseHandler);
+    successMessage.removeEventListener('click', successClickCloseHandler);
+    successButton.removeEventListener('click', successCloseHandler);
   };
 
   // Сообщение при успешной отправке данных
@@ -41,9 +41,9 @@
     imgUpload.classList.add('hidden');
     main.appendChild(successMessage);
 
-    document.addEventListener('keydown', EscOnSuccess);
-    successMessage.addEventListener('click', closeSuccessByClick);
-    successButton.addEventListener('click', closeSuccessMessage);
+    document.addEventListener('keydown', successEscCloseHandler);
+    successMessage.addEventListener('click', successClickCloseHandler);
+    successButton.addEventListener('click', successCloseHandler);
   };
 
   // Обработчик при успешной отправке данных
@@ -52,20 +52,20 @@
     getDefaultSettings();
   };
 
-  var EscOnError = function (evt) {
-    window.util.isEscEvent(evt, closeErrorMessage);
+  var errorEscCloseHandler = function (evt) {
+    window.util.isEscEvent(evt, errorCloseHandler);
   };
 
-  var closeErrorByClick = function () {
-    closeErrorMessage();
+  var errorClickCloseHandler = function () {
+    errorCloseHandler();
   };
 
-  var closeErrorMessage = function () {
+  var errorCloseHandler = function () {
     errorMessage.classList.add('hidden');
 
-    document.removeEventListener('keydown', EscOnError);
-    errorButton.removeEventListener('click', closeErrorMessage);
-    document.removeEventListener('click', closeErrorByClick);
+    document.removeEventListener('keydown', errorEscCloseHandler);
+    errorButton.removeEventListener('click', errorCloseHandler);
+    document.removeEventListener('click', errorClickCloseHandler);
   };
 
   // Сообщение при ошибке отправки данных на сервер
@@ -74,9 +74,9 @@
     imgUpload.classList.add('hidden');
     main.appendChild(errorMessage);
 
-    document.addEventListener('keydown', EscOnError);
-    errorButton.addEventListener('click', closeErrorMessage);
-    document.addEventListener('click', closeErrorByClick);
+    document.addEventListener('keydown', errorEscCloseHandler);
+    errorButton.addEventListener('click', errorCloseHandler);
+    document.addEventListener('click', errorClickCloseHandler);
   };
 
   // Обработчик при ошибке загрузки данных на сервер

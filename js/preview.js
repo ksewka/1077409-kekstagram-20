@@ -15,10 +15,10 @@
     bigPicture.classList.add('hidden');
 
     commentsLoader.classList.remove('hidden');
-    document.removeEventListener('keydown', onPopupEcsClose);
+    document.removeEventListener('keydown', popupEcsCloseHandler);
   };
 
-  var onPopupEcsClose = function (evt) {
+  var popupEcsCloseHandler = function (evt) {
     if (evt.key === 'Escape') {
       closePopup();
     }
@@ -113,7 +113,7 @@
         bigPicture.querySelector('.big-picture__cancel').addEventListener('click', function () {
           closePopup();
         });
-        document.addEventListener('keydown', onPopupEcsClose);
+        document.addEventListener('keydown', popupEcsCloseHandler);
 
         // Скрываем все комментарии кроме первых 5 шт
         var hiddenComments = document.querySelectorAll('.social__comment:nth-child(n+6)');
